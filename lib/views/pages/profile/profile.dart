@@ -1,3 +1,4 @@
+import 'package:bazarmilo/views/components/navbar.dart';
 import 'package:flutter/material.dart';
 
 class profile extends StatefulWidget {
@@ -10,6 +11,9 @@ class profile extends StatefulWidget {
 class _profileState extends State<profile> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+     return Scaffold(
+      bottomNavigationBar: bottomNavigationBar(currentPageIndex: 2,),
+      body: const Text("profile"),
+    );
   }
 }

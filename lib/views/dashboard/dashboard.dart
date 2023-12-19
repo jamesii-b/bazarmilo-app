@@ -1,3 +1,4 @@
+import 'package:bazarmilo/views/components/navbar.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -10,11 +11,9 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Divider(),
-        Text(" You are heading ")
-      ],
+    return Scaffold(
+      bottomNavigationBar: bottomNavigationBar(currentPageIndex: 0),
+      body: const Text("dashboard"),
     );
   }
 }

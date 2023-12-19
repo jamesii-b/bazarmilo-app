@@ -1,7 +1,7 @@
-import 'package:bazarmilo/pages/profile.dart';
-import 'package:bazarmilo/pages/maps.dart';
+import 'package:bazarmilo/views/pages/profile/profile.dart';
+import 'package:bazarmilo/views/pages/navigation/maps.dart';
 import 'package:flutter/material.dart';
-import 'package:bazarmilo/pages/dashboard.dart';
+import 'package:bazarmilo/views/pages/dashboard/dashboard.dart';
 
 void main() {
   runApp(const MyApp());
