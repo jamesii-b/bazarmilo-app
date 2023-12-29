@@ -1,3 +1,4 @@
+import 'package:bazarmilo/views/pages/authentication/authentication.dart';
 import 'package:bazarmilo/views/pages/profile/profile.dart';
 import 'package:bazarmilo/views/pages/navigation/maps.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(useMaterial3: true),
         initialRoute: '/',
         routes: {
-          '/': (context) => Dashboard(),
-          '/map': (context) => const mapsPage(),
+          '/': (context) => Authentication(),
+          '/home': (context) => Dashboard(),
+          '/map': (context) => mapPage(),
           '/profile': (context) => profile(),
         },
       ),
