@@ -27,11 +27,11 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(useMaterial3: true),
-          initialRoute: '/',
+          initialRoute: '/login',
           routes: {
             '/': (context) => Dashboard(),
             '/login': (context) => loginPage(),
-            '/map': (context) => mapPage(),
+            '/map': (context) => MapPage(),
             '/profile': (context) => profile(),
           },
         ),
