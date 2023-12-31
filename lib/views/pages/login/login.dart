@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bazarmilo/models/authentication.dart';
+import 'package:bazarmilo/provider/loginerror.dart';
 import 'package:bazarmilo/provider/loginstate.dart';
 import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:bazarmilo/views/pages/login/components/forgotpassword.dart';
@@ -24,9 +25,17 @@ class _loginPageState extends State<loginPage> {
   @override
   void initState() {
     // TODO: implement initState
-    completeUrl = httpUrl + "/user/login";
-
+    completeUrl = "$httpUrl/user/login";
+    checkLoginStatus(context);
     super.initState();
+  }
+
+  void checkLoginStatus(BuildContext context) async {
+    var provider = Provider.of<LoginProvider>(context, listen: false);
+
+    if (provider.isLogin) {
+      Navigator.pushReplacementNamed(context, '/');
+    }
   }
 
   TextEditingController usernameController = TextEditingController();
@@ -34,11 +43,10 @@ class _loginPageState extends State<loginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    var loginErrorProvider = Provider.of<LoginError>(context, listen: false);
 
     return Scaffold(
-      body: SizedBox(
-        width: double.maxFinite,
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,11 +92,11 @@ class _loginPageState extends State<loginPage> {
                 ),
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: TextField(
                 controller: usernameController,
-                decoration:const InputDecoration(
+                decoration: const InputDecoration(
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Color(
@@ -113,7 +121,7 @@ class _loginPageState extends State<loginPage> {
                 ),
               ),
             ),
-             Padding(
+            Padding(
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: TextField(
                 controller: passwordController,
@@ -131,6 +139,8 @@ class _loginPageState extends State<loginPage> {
             const SizedBox(
               height: 125,
             ),
+            if (loginErrorProvider.showError)
+              const Text("Username or Password doesn't match"),
             signInButton(
               url: completeUrl,
               username: usernameController.text,
