@@ -1,4 +1,10 @@
+import 'package:bazarmilo/provider/loginstate.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void checkAuthenticationandNavigate() {
+ 
+}
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
@@ -8,35 +14,14 @@ class Authentication extends StatefulWidget {
 }
 
 class _AuthenticationState extends State<Authentication> {
-  bool isLogin = true;
   @override
   void initState() {
-    _redirectToRoute();
+    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder widget or any other UI you want to display
-    return Scaffold(
-      body: Center(
-        child: Text("Authentication"),
-      ),
-    );
-  }
-
-  void _redirectToRoute() {
-    // Use Navigator to push to another route based on the value of isLogin
-    if (isLogin) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(
-            context, '/home'); // Replace with your route
-      });
-    } else {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(
-            context, '/login'); // Replace with your route
-      });
-    }
+    return const Placeholder();
   }
 }
