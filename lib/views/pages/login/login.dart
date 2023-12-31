@@ -15,13 +15,13 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  String websocketUrl = dotenv.env['API_URL'] ?? "";
+  String httpUrl = dotenv.env['API_URL'] ?? "";
   String completeUrl = "";
 
   @override
   void initState() {
     // TODO: implement initState
-    completeUrl = websocketUrl + "/user/login";
+    completeUrl = httpUrl + "/user/login";
 
     super.initState();
   }
@@ -75,6 +75,8 @@ class _loginPageState extends State<loginPage> {
                 setState(() {
                   Navigator.pushNamed(context, '/');
                   loginProvider.updateLoginStatus(true);
+                  loginProvider
+                      .updateUsername(usernameController.text.toString());
                 });
               } else {
                 // print(newResponse.body);
