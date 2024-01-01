@@ -1,149 +1,158 @@
-import 'dart:async';
-
+import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:location/location.dart';
-import 'package:bazarmilo/const/apikey.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/plugin_api.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({Key? key}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  Location _locationController = new Location();
-
-  final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
-
-  static const LatLng _pGooglePlex = LatLng(27.614479, 85.538419);
-  static const LatLng _pApplePark = LatLng(27.631125, 85.511849);
-  LatLng? _currentP = null;
-
-  Map<PolylineId, Polyline> polylines = {};
+  List<LatLng> routpoints = [LatLng(27.6810911, 85.3163061)];
+  LatLng? userLocation;
 
   @override
   void initState() {
     super.initState();
-    getLocationUpdates().then(
-      (_) => {
-        getPolylinePoints().then((coordinates) => {
-              generatePolyLineFromPoints(coordinates),
-            }),
-      },
-    );
+    // getUserLocation();
+    calculateRoute();
+  }
+
+  void getUserLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      await Geolocator.requestPermission();
+    } else {
+      try {
+        Position? currentLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best,
+        );
+        if (currentLocation != null) {
+          setState(() {
+            userLocation =
+                LatLng(currentLocation.latitude, currentLocation.longitude);
+          });
+        } else {
+          displayPrompt(
+              context, "Invalid", "Please turn on your location\n \n");
+          // Handle the case where user location is not available
+        }
+      } catch (e) {
+        displayPrompt(context, "Invalid", "Please turn on your location\n \n");
+        // Handle exceptions (e.g., PlatformException) related to geolocation
+        print('Error getting location: $e');
+      }
+    }
+  }
+
+  void calculateRoute() async {
+    print("Calculating route\n \n \n");
+    if (userLocation == null) {
+      getUserLocation();
+      // Handle the case where user location is not available
+      return;
+    }
+
+    var v1 = userLocation!.latitude;
+    var v2 = userLocation!.longitude;
+    var v3 = routpoints[0].latitude;
+    var v4 = routpoints[0].longitude;
+
+    var url = Uri.parse(
+        'http://router.project-osrm.org/route/v1/driving/$v2,$v1;$v4,$v3?steps=true&annotations=true&geometries=geojson&overview=full');
+
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        setState(() {
+          routpoints = [];
+          var ruter =
+              jsonDecode(response.body)['routes'][0]['geometry']['coordinates'];
+          for (int i = 0; i < ruter.length; i++) {
+            var reep = ruter[i].toString();
+            reep = reep.replaceAll("[", "");
+            reep = reep.replaceAll("]", "");
+            var lat1 = reep.split(',');
+            var long1 = reep.split(",");
+            routpoints.add(
+              LatLng(double.parse(lat1[1]), double.parse(long1[0])),
+            );
+          }
+          print(routpoints);
+        });
+      } else {
+        // Handle the error, perhaps by showing a message to the user
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle exceptions related to the HTTP request
+      print('Error: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _currentP == null
-          ? const Center(
-              child: Text("Loading..."),
-            )
-          : GoogleMap(
-              onMapCreated: ((GoogleMapController controller) =>
-                  _mapController.complete(controller)),
-              initialCameraPosition: CameraPosition(
-                target: _pGooglePlex,
-                zoom: 13,
-              ),
-              markers: {
+      appBar: AppBar(
+        // title: Text("Map"),
+        // centerTitle: true,
+      ),
+      body: FlutterMap(
+        options: MapOptions(
+          center: userLocation ?? LatLng(27.6197888, 85.5388073),
+          zoom: 15,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.app',
+          ),
+          PolylineLayer(
+            polylineCulling: false,
+            polylines: [
+              Polyline(points: routpoints, color: Colors.black, strokeWidth: 9),
+            ],
+          ),
+          MarkerLayer(
+            markers: [
+              if (userLocation != null)
                 Marker(
-                  markerId: MarkerId("_currentLocation"),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue,
+                  width: 50.0,
+                  height: 50.0,
+                  point: userLocation!,
+                  builder: (ctx) => Icon(
+                    Icons.person_pin,
+                    color: Colors.blue,
                   ),
-                  position: _currentP!,
                 ),
+              if (routpoints.isNotEmpty)
                 Marker(
-                    markerId: MarkerId("_sourceLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pGooglePlex),
-                Marker(
-                    markerId: MarkerId("_destionationLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pApplePark)
-              },
-              polylines: Set<Polyline>.of(polylines.values),
-            ),
+                  width: 50.0,
+                  height: 50.0,
+                  point: routpoints.last,
+                  builder: (ctx) => Icon(
+                    Icons.location_on,
+                    color: Colors.red,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          calculateRoute();
+        },
+        child: Icon(Icons.directions),
+      ),
     );
-  }
-
-  Future<void> _cameraToPosition(LatLng pos) async {
-    final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
-      target: pos,
-      zoom: 15,
-    );
-    await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
-    );
-  }
-
-  Future<void> getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
-    _serviceEnabled = await _locationController.serviceEnabled();
-    if (_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
-    } else {
-      return;
-    }
-
-    _permissionGranted = await _locationController.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationController.onLocationChanged
-        .listen((LocationData currentLocation) {
-      if (currentLocation.latitude != null &&
-          currentLocation.longitude != null) {
-        setState(() {
-          _currentP =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          _cameraToPosition(_currentP!);
-        });
-      }
-    });
-  }
-
-  Future<List<LatLng>> getPolylinePoints() async {
-    List<LatLng> polylineCoordinates = [];
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      GOOGLE_MAPS_API_KEY,
-      PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
-      PointLatLng(_pApplePark.latitude, _pApplePark.longitude),
-      travelMode: TravelMode.driving,
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-    } else {
-      print(result.errorMessage);
-    }
-    return polylineCoordinates;
-  }
-
-  void generatePolyLineFromPoints(List<LatLng> polylineCoordinates) async {
-    PolylineId id = PolylineId("poly");
-    Polyline polyline = Polyline(
-        polylineId: id,
-        color: Colors.pink,
-        points: polylineCoordinates,
-        width: 8);
-    setState(() {
-      polylines[id] = polyline;
-    });
   }
 }

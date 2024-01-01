@@ -18,7 +18,7 @@ class _splashScreenState extends State<splashScreen> {
 
   navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 3500), () {});
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   @override

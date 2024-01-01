@@ -82,7 +82,6 @@ class _DashboardState extends State<Dashboard> {
       bottomNavigationBar: bottomNavigationBar(currentPageIndex: 0),
       body: Column(
         children: [
-          Text("love is a waste of time?"),
           DisplayInfo(
             deliveryData: deliveryData,
           ),
