@@ -30,7 +30,7 @@ class _splashScreenState extends State<splashScreen> {
     if (provider.isLogin) {
       Navigator.pushReplacementNamed(context, '/');
     }else{
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/');
     }
   }
 

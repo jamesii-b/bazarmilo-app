@@ -6,11 +6,9 @@ import 'package:bazarmilo/views/pages/navigation/maps.dart';
 import 'package:bazarmilo/views/pages/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:bazarmilo/views/pages/dashboard/dashboard.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  await dotenv.load();
   runApp(const MyApp());
 }
 

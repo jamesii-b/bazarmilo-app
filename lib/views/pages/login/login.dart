@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bazarmilo/const/others.dart';
 import 'package:bazarmilo/models/authentication.dart';
 import 'package:bazarmilo/provider/loginerror.dart';
 import 'package:bazarmilo/provider/loginstate.dart';
@@ -7,7 +8,6 @@ import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:bazarmilo/views/pages/login/components/forgotpassword.dart';
 import 'package:bazarmilo/views/pages/login/components/signinbutton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -19,7 +19,7 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  String httpUrl = dotenv.env['API_URL'] ?? "";
+  String httpUrl = API_URL;
   String completeUrl = "";
 
   @override

@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:bazarmilo/const/others.dart';
+import 'package:bazarmilo/viewmodels/trackandsend/tracking.dart';
 import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:web_socket_channel/io.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -22,12 +25,21 @@ class _MapPageState extends State<MapPage> {
     accuracy: LocationAccuracy.best,
     distanceFilter: 1, //distance in meter
   );
-  List<LatLng> routpoints = [LatLng(27.6810911, 85.3163061)];
+  List<LatLng> routpoints = [LatLng(27.6197343, 85.5383528)];
   LatLng? userLocation;
   late StreamSubscription<Position> _locationSubscription;
+  late IOWebSocketChannel _channel;
   @override
   void initState() {
     super.initState();
+    try {
+      _channel = IOWebSocketChannel.connect(WEBSOCKET_URL);
+      print("connected to server\n ");
+    } catch (e) {
+      print("cant connect to server \n ");
+      print(e);
+    }
+
     // getUserLocation();
     calculateRoute();
     _locationSubscription =
@@ -35,8 +47,17 @@ class _MapPageState extends State<MapPage> {
             .listen((Position position) {
       setState(() {
         userLocation = LatLng(position.latitude, position.longitude);
+        _sendLocationToServer(userLocation!);
       });
     });
+  }
+
+  void _sendLocationToServer(LatLng location) {
+    print("\n \n sending to server \n");
+    // Assuming the server expects and sends messages in JSON format
+    final message = jsonEncode(
+        {'latitude': location.latitude, 'longitude': location.longitude});
+    _channel.sink.add(message);
   }
 
   void getUserLocation() async {
@@ -115,9 +136,9 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Bazarmilo"),
-          // centerTitle: true,
-          ),
+        title: Text("Bazarmilo"),
+        // centerTitle: true,
+      ),
       body: FlutterMap(
         options: MapOptions(
           center: userLocation ?? LatLng(27.6197888, 85.5388073),

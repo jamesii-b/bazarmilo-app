@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:bazarmilo/const/others.dart';
 import 'package:bazarmilo/models/userdata.dart';
 import 'package:bazarmilo/provider/loginstate.dart';
 import 'package:bazarmilo/views/components/navbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +16,7 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
-  String httpUrl = dotenv.env['API_URL'] ?? "";
+  String httpUrl = API_URL;
   String completeUrl = "";
 
   @override

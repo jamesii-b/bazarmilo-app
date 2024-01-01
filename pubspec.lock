@@ -86,14 +86,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_dotenv:
-    dependency: "direct main"
-    description:
-      name: flutter_dotenv
-      sha256: "9357883bdd153ab78cbf9ffa07656e336b8bbb2b5a3ca596b0b27e119f7c7d77"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -232,14 +224,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
-  latlng:
-    dependency: "direct main"
-    description:
-      name: latlng
-      sha256: "7184897f8c807eec96b0ec931293d46c052f92bfee9a9b2b4648b66fed5f34cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   latlong2:
     dependency: "direct main"
     description:
