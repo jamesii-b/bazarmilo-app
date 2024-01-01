@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bazarmilo/const/others.dart';
+import 'package:bazarmilo/provider/loginstate.dart';
 import 'package:bazarmilo/viewmodels/trackandsend/tracking.dart';
 import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:web_socket_channel/io.dart';
@@ -39,6 +41,7 @@ class _MapPageState extends State<MapPage> {
       print("cant connect to server \n ");
       print(e);
     }
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
 
     // getUserLocation();
     calculateRoute();
@@ -47,16 +50,19 @@ class _MapPageState extends State<MapPage> {
             .listen((Position position) {
       setState(() {
         userLocation = LatLng(position.latitude, position.longitude);
-        _sendLocationToServer(userLocation!);
+        _sendLocationToServer(userLocation!, loginProvider.username);
       });
     });
   }
 
-  void _sendLocationToServer(LatLng location) {
+  void _sendLocationToServer(LatLng location, String? username) {
     print("\n \n sending to server \n");
     // Assuming the server expects and sends messages in JSON format
-    final message = jsonEncode(
-        {'latitude': location.latitude, 'longitude': location.longitude});
+    final message = jsonEncode({
+      'latitude': location.latitude,
+      'longitude': location.longitude,
+      'username': username ?? 'defaultUsername',
+    });
     _channel.sink.add(message);
   }
 
