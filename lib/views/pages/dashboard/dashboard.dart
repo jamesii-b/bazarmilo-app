@@ -41,7 +41,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> checkLoginStatus(BuildContext context) async {
     var provider = Provider.of<LoginProvider>(context, listen: false);
 
-    if (provider.isLogin) {
+    if (!provider.isLogin) {
       Navigator.pushReplacementNamed(context, '/login');
     }
   }

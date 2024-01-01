@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -16,14 +18,25 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  final LocationSettings locationSettings = LocationSettings(
+    accuracy: LocationAccuracy.best,
+    distanceFilter: 1, //distance in meter
+  );
   List<LatLng> routpoints = [LatLng(27.6810911, 85.3163061)];
   LatLng? userLocation;
-
+  late StreamSubscription<Position> _locationSubscription;
   @override
   void initState() {
     super.initState();
     // getUserLocation();
     calculateRoute();
+    _locationSubscription =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
+      setState(() {
+        userLocation = LatLng(position.latitude, position.longitude);
+      });
+    });
   }
 
   void getUserLocation() async {
@@ -102,9 +115,9 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text("Map"),
-        // centerTitle: true,
-      ),
+          title: Text("Bazarmilo"),
+          // centerTitle: true,
+          ),
       body: FlutterMap(
         options: MapOptions(
           center: userLocation ?? LatLng(27.6197888, 85.5388073),

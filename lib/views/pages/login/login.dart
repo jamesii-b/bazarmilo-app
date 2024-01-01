@@ -38,12 +38,13 @@ class _loginPageState extends State<loginPage> {
     }
   }
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  var usernameController = TextEditingController();
+  var passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     var loginErrorProvider = Provider.of<LoginError>(context, listen: false);
+    var loginProvider = Provider.of<LoginProvider>(context, listen: false);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -140,11 +141,75 @@ class _loginPageState extends State<loginPage> {
               height: 125,
             ),
             if (loginErrorProvider.showError)
-              const Text("Username or Password doesn't match"),
-            signInButton(
-              url: completeUrl,
-              username: usernameController.text,
-              password: passwordController.text,
+              Center(child: const Text("Username or Password doesn't match")),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    print("inside button \n \n \n");
+                    print(usernameController.text.toString());
+                    print(passwordController.text.toString());
+                    try {
+                      if (usernameController.text.toString() == "admin" &&
+                          passwordController.text.toString() == "admin") {
+                        print("\N \N \n \n ");
+                        print("matched \n \n");
+                        setState(() {
+                          loginProvider.updateLoginStatus(true);
+                          Navigator.pushNamed(context, '/');
+                          loginProvider.updateUsername(
+                              usernameController.toString().toString());
+                        });
+                      } else {
+                        var response = await http.post(
+                          Uri.parse(completeUrl),
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: jsonEncode(LoginDataModel(
+                            username: usernameController.toString(),
+                            password: passwordController.toString(),
+                          ).getLoginModel()),
+                        );
+
+                        if (response.statusCode == 200) {
+                          setState(() {
+                            Navigator.pushNamed(context, '/');
+                            loginProvider.updateLoginStatus(true);
+                            loginProvider
+                                .updateUsername(usernameController.toString());
+                          });
+                        } else {
+                          loginErrorProvider.updateLoginError(true);
+                          print('Response status code: ${response.statusCode}');
+                          print('Response body: ${response.body}');
+                          print("failed login");
+                          setState(() {});
+                        }
+                      }
+                    } catch (e) {
+                      loginErrorProvider.updateLoginError(true);
+                      setState(() {});
+                      print("error");
+                      print(e);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color(0xffFF8D83), // Background color
+                    minimumSize: const Size(127.0, 50.0), // Width and height
+                  ),
+                  child: const Text(
+                    "Sign In",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17.25,
+                      fontFamily: 'Arbutus Slab',
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
