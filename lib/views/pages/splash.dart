@@ -1,5 +1,7 @@
+import 'package:bazarmilo/provider/loginstate.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class splashScreen extends StatefulWidget {
   const splashScreen({super.key});
@@ -18,7 +20,18 @@ class _splashScreenState extends State<splashScreen> {
 
   navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 3500), () {});
-    Navigator.pushReplacementNamed(context, '/');
+    checkLoginStatus(context);
+    // Navigator.pushReplacementNamed(context, '/');
+  }
+
+  void checkLoginStatus(BuildContext context) async {
+    var provider = Provider.of<LoginProvider>(context, listen: false);
+
+    if (provider.isLogin) {
+      Navigator.pushReplacementNamed(context, '/');
+    }else{
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 
   @override

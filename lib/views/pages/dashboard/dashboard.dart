@@ -25,9 +25,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      checkLoginStatus(context);
-    });
+
     completeUrl = "$httpUrl/tasks";
     username = Provider.of<LoginProvider>(context, listen: false).username;
     // Use the then method to handle the asynchronous work
@@ -36,14 +34,6 @@ class _DashboardState extends State<Dashboard> {
       // Set state here if needed
       setState(() {});
     });
-  }
-
-  Future<void> checkLoginStatus(BuildContext context) async {
-    var provider = Provider.of<LoginProvider>(context, listen: false);
-
-    if (!provider.isLogin) {
-      Navigator.pushReplacementNamed(context, '/login');
-    }
   }
 
   Future<void> getDeliveryData(String url, String username) async {
@@ -62,12 +52,12 @@ class _DashboardState extends State<Dashboard> {
             .toList();
         // Set the state after the data is filtered
         setState(() {
-        deliveryData = filteredData;
+          deliveryData = filteredData;
         });
-    // Print each instance's details
-      deliveryData.forEach((data) {
-        print(data);
-      });
+        // Print each instance's details
+        deliveryData.forEach((data) {
+          print(data);
+        });
       } else {
         throw Exception('Failed to load travel data');
       }

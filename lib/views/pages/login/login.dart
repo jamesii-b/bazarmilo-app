@@ -26,16 +26,7 @@ class _loginPageState extends State<loginPage> {
   void initState() {
     // TODO: implement initState
     completeUrl = "$httpUrl/user/login";
-    checkLoginStatus(context);
     super.initState();
-  }
-
-  void checkLoginStatus(BuildContext context) async {
-    var provider = Provider.of<LoginProvider>(context, listen: false);
-
-    if (provider.isLogin) {
-      Navigator.pushReplacementNamed(context, '/');
-    }
   }
 
   var usernameController = TextEditingController();
