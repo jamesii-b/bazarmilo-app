@@ -19,7 +19,7 @@ class _splashScreenState extends State<splashScreen> {
   }
 
   navigatetohome() async {
-    await Future.delayed(Duration(milliseconds: 3500), () {});
+    await Future.delayed(Duration(milliseconds: 1500), () {});
     checkLoginStatus(context);
     // Navigator.pushReplacementNamed(context, '/');
   }
@@ -28,7 +28,7 @@ class _splashScreenState extends State<splashScreen> {
     var provider = Provider.of<LoginProvider>(context, listen: false);
 
     if (provider.isLogin) {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/login');
     }else{
       Navigator.pushReplacementNamed(context, '/');
     }

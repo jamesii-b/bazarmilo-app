@@ -43,9 +43,10 @@ class _DashboardState extends State<Dashboard> {
         String localDate = DateTime.now().toString().substring(0, 10);
         print(localDate);
         List<dynamic> data = json.decode(response.body);
+        print(data);
         List<DeliveryData> filteredData = data
             .where((item) =>
-                item['username'] == username &&
+                item['username'] == username ||
                 item['date'] ==
                     localDate) // You can customize the date comparison
             .map((item) => DeliveryData.fromJson(item))
@@ -113,8 +114,6 @@ class _DisplayInfoState extends State<DisplayInfo> {
                               Text("Delivered: ${data.getDelivered()}"),
                               Text("ID: ${data.getId()}"),
                               Text(
-                                  "From: (${data.getLatitudeFrom()}, ${data.getLongitudeFrom()})"),
-                              Text(
                                   "To: (${data.getLatitudeTo()}, ${data.getLongitudeTo()})"),
                               Text("Product ID: ${data.getProductID()}"),
                               Text("Username: ${data.getUsername()}"),
@@ -127,10 +126,25 @@ class _DisplayInfoState extends State<DisplayInfo> {
                     );
                   }).toList()
                 : [
+                    SizedBox(
+                      width: double.infinity,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                    ),
                     // Display a message when there is no data
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("No delivery data available."),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "No delivery data available.",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
           ),

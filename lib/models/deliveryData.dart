@@ -26,7 +26,7 @@ class DeliveryData {
   factory DeliveryData.fromJson(Map<String, dynamic> json) {
     return DeliveryData(
       date: json['date'],
-      delivered: json['delivered'],
+      delivered: json['delivered'] == null ? 0 : json['delivered'],
       id: json['id'],
       latitudeFrom: json['latitudeFrom'],
       latitudeTo: json['latitudeTo'],
