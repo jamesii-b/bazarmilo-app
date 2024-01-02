@@ -2,9 +2,7 @@ class DeliveryData {
   String date;
   String delivered;
   String id;
-  String latitudeFrom;
   String latitudeTo;
-  String longitudeFrom;
   String longitudeTo;
   String productID;
   String username;
@@ -14,9 +12,7 @@ class DeliveryData {
     required this.date,
     required this.delivered,
     required this.id,
-    required this.latitudeFrom,
     required this.latitudeTo,
-    required this.longitudeFrom,
     required this.longitudeTo,
     required this.productID,
     required this.username,
@@ -26,11 +22,9 @@ class DeliveryData {
   factory DeliveryData.fromJson(Map<String, dynamic> json) {
     return DeliveryData(
       date: json['date'],
-      delivered: json['delivered'] == null ? 0 : json['delivered'],
+      delivered: json['delivered'],
       id: json['id'],
-      latitudeFrom: json['latitudeFrom'],
       latitudeTo: json['latitudeTo'],
-      longitudeFrom: json['longitudeFrom'],
       longitudeTo: json['longitudeTo'],
       productID: json['productID'],
       username: json['username'],
@@ -44,11 +38,9 @@ class DeliveryData {
 
   String getId() => id;
 
-  String getLatitudeFrom() => latitudeFrom;
 
   String getLatitudeTo() => latitudeTo;
 
-  String getLongitudeFrom() => longitudeFrom;
 
   String getLongitudeTo() => longitudeTo;
 
@@ -63,9 +55,7 @@ class DeliveryData {
         'date: $date, '
         'delivered: $delivered, '
         'id: $id, '
-        'latitudeFrom: $latitudeFrom, '
         'latitudeTo: $latitudeTo, '
-        'longitudeFrom: $longitudeFrom, '
         'longitudeTo: $longitudeTo, '
         'productID: $productID, '
         'username: $username, '

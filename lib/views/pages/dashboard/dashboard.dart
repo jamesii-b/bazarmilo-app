@@ -101,28 +101,47 @@ class _DisplayInfoState extends State<DisplayInfo> {
         SingleChildScrollView(
           child: Column(
             children: (deliveryData != null && deliveryData.isNotEmpty)
-                ? deliveryData.map((data) {
-                    print(data.getDate());
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        child: ListTile(
-                          title: Text("Date: ${data.getDate()}"),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Delivered: ${data.getDelivered()}"),
-                              Text("ID: ${data.getId()}"),
-                              Text(
-                                  "To: (${data.getLatitudeTo()}, ${data.getLongitudeTo()})"),
-                              Text("Product ID: ${data.getProductID()}"),
-                              Text("Username: ${data.getUsername()}"),
-                              Text(
-                                  "Vehicle Number: ${data.getVehicleNumber()}"),
-                            ],
+                ? groupByDate(deliveryData).entries.map((entry) {
+                    String dateTitle = entry.key;
+                    List<DeliveryData> dataList = entry.value;
+
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            dateTitle,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
+                        ...dataList.map((data) {
+                          print(data.getDate());
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              child: ListTile(
+                                title: Text("Date: ${data.getDate()}"),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Delivered: ${data.getDelivered()}"),
+                                    Text("ID: ${data.getId()}"),
+                                    Text(
+                                        "To: (${data.getLatitudeTo()}, ${data.getLongitudeTo()})"),
+                                    Text("Product ID: ${data.getProductID()}"),
+                                    Text("Username: ${data.getUsername()}"),
+                                    Text(
+                                        "Vehicle Number: ${data.getVehicleNumber()}"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ],
                     );
                   }).toList()
                 : [
@@ -137,7 +156,6 @@ class _DisplayInfoState extends State<DisplayInfo> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             "No delivery data available.",
@@ -151,5 +169,29 @@ class _DisplayInfoState extends State<DisplayInfo> {
         ),
       ],
     );
+  }
+
+  Map<String, List<DeliveryData>> groupByDate(List<DeliveryData> dataList) {
+    Map<String, List<DeliveryData>> groupedData = {};
+
+    for (var data in dataList) {
+      String date = data.getDate();
+      if (isToday(date)) {
+        groupedData.putIfAbsent("Today", () => []).add(data);
+      } else {
+        groupedData.putIfAbsent("Upcoming Dates", () => []).add(data);
+      }
+    }
+
+    // Reorder the groups to show "Today" first
+    groupedData = Map.fromEntries(groupedData.entries.toList()
+      ..sort((a, b) => a.key == "Today" ? -1 : 1));
+
+    return groupedData;
+  }
+
+  bool isToday(String date) {
+    String today = DateTime.now().toString().substring(0, 10);
+    return date == today;
   }
 }
