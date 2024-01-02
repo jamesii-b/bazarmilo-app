@@ -37,17 +37,17 @@ class _bottomNavigationBarState extends State<bottomNavigationBar> {
       },
       destinations: const <Widget>[
         NavigationDestination(
-          icon: Icon(Icons.explore),
-          label: 'Explore',
+          icon: Icon(Icons.home),
+          label: 'Home',
         ),
         NavigationDestination(
-          icon: Icon(Icons.commute),
-          label: 'Commute',
+          icon: Icon(Icons.travel_explore),
+          label: 'Map',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.bookmark),
+          selectedIcon: Icon(Icons.person),
           icon: Icon(Icons.bookmark_border),
-          label: 'Saved',
+          label: 'Profile',
         ),
       ],
     );
