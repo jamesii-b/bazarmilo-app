@@ -143,7 +143,6 @@ class _DisplayInfoState extends State<DisplayInfo> {
                                     Text(
                                         "To: (${data.getLatitudeTo()}, ${data.getLongitudeTo()})"),
                                     Text("Product ID: ${data.getProductID()}"),
-                                    Text("Username: ${data.getUsername()}"),
                                     Text(
                                         "Vehicle Number: ${data.getVehicleNumber()}"),
                                   ],

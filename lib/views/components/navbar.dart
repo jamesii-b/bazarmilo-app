@@ -45,8 +45,7 @@ class _bottomNavigationBarState extends State<bottomNavigationBar> {
           label: 'Map',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.person),
-          icon: Icon(Icons.bookmark_border),
+          icon: Icon(Icons.person),
           label: 'Profile',
         ),
       ],

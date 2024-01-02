@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class LoginProvider extends ChangeNotifier {
   bool _isLogin = false;
   bool get isLogin => _isLogin;
-  String _username = "mahesh123";
+  String _username = "";
   String get username => _username;
   void updateUsername(value) {
     _username = value;

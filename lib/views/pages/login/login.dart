@@ -153,14 +153,15 @@ class _loginPageState extends State<loginPage> {
                               usernameController.toString().toString());
                         });
                       } else {
+                        print(completeUrl);
                         var response = await http.post(
                           Uri.parse(completeUrl),
                           headers: {
                             'Content-Type': 'application/json',
                           },
                           body: jsonEncode(LoginDataModel(
-                            username: usernameController.toString(),
-                            password: passwordController.toString(),
+                            username: usernameController.text.toString(),
+                            password: passwordController.text.toString(),
                           ).getLoginModel()),
                         );
 
