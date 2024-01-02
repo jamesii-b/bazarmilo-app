@@ -170,7 +170,7 @@ class _loginPageState extends State<loginPage> {
                             Navigator.pushNamed(context, '/');
                             loginProvider.updateLoginStatus(true);
                             loginProvider
-                                .updateUsername(usernameController.toString());
+                                .updateUsername(usernameController.text.toString());
                           });
                         } else {
                           loginErrorProvider.updateLoginError(true);

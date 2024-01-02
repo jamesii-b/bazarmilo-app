@@ -22,8 +22,9 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     String username =
-        Provider.of<LoginProvider>(context, listen: false).username;
+        Provider.of<LoginProvider>(context, listen: true).username;
     completeUrl = httpUrl + "/user/datum/" + username;
+    print(completeUrl);
 
     return Scaffold(
       bottomNavigationBar: bottomNavigationBar(currentPageIndex: 2),
