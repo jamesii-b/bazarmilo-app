@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bazarmilo/const/others.dart';
 import 'package:bazarmilo/provider/loginstate.dart';
-import 'package:bazarmilo/viewmodels/trackandsend/tracking.dart';
+import 'package:bazarmilo/provider/mapProvider.dart';
 import 'package:bazarmilo/views/pages/login/components/displayprompt.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,13 +27,17 @@ class _MapPageState extends State<MapPage> {
     accuracy: LocationAccuracy.best,
     distanceFilter: 1, //distance in meter
   );
-  List<LatLng> routpoints = [LatLng(27.6197343, 85.5383528)];
+  List<LatLng> routpoints = [];
   LatLng? userLocation;
   late StreamSubscription<Position> _locationSubscription;
   late IOWebSocketChannel _channel;
   @override
   void initState() {
     super.initState();
+    routpoints = [
+      Provider.of<MapProvider>(context, listen: false).routePoint ??
+          LatLng(27.6197888, 85.5388073),
+    ];
     try {
       _channel = IOWebSocketChannel.connect(WEBSOCKET_URL);
       print("connected to server\n ");

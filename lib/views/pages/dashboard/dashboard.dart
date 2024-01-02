@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:bazarmilo/const/others.dart';
 import 'package:bazarmilo/models/deliveryData.dart';
 import 'package:bazarmilo/provider/loginstate.dart';
+import 'package:bazarmilo/provider/mapProvider.dart';
 import 'package:bazarmilo/views/components/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,11 +29,9 @@ class _DashboardState extends State<Dashboard> {
 
     completeUrl = "$httpUrl/tasks";
     username = Provider.of<LoginProvider>(context, listen: false).username;
-    // Use the then method to handle the asynchronous work
     getDeliveryData(completeUrl, username).then((_) {
-      // This will be called after the asynchronous call is complete
-      // Set state here if needed
       setState(() {});
+      updateCoordinateIfToday();
     });
   }
 
@@ -46,9 +45,7 @@ class _DashboardState extends State<Dashboard> {
         print(data);
         List<DeliveryData> filteredData = data
             .where((item) =>
-                item['username'] == username ||
-                item['date'] ==
-                    localDate) // You can customize the date comparison
+                item['username'] == username || item['date'] == localDate)
             .map((item) => DeliveryData.fromJson(item))
             .toList();
         // Set the state after the data is filtered
@@ -64,6 +61,20 @@ class _DashboardState extends State<Dashboard> {
       }
     } catch (e) {
       print('Error fetching travel data: $e');
+    }
+  }
+
+  void updateCoordinateIfToday() {
+    final mapProvider = Provider.of<MapProvider>(context, listen: false);
+    String today = DateTime.now().toString().substring(0, 10);
+
+    // Check if there is data for today and set coordinate if found
+    if (deliveryData.any((data) => data.getDate() == today)) {
+      // Assuming there is only one data for today, you may need to modify this logic
+      DeliveryData todayData =
+          deliveryData.firstWhere((data) => data.getDate() == today);
+      mapProvider.updateCoordinate(
+          LatLng(todayData.getLatitudeTo(), todayData.getLongitudeTo()));
     }
   }
 

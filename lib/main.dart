@@ -1,5 +1,6 @@
 import 'package:bazarmilo/provider/loginerror.dart';
 import 'package:bazarmilo/provider/loginstate.dart';
+import 'package:bazarmilo/provider/mapProvider.dart';
 import 'package:bazarmilo/views/pages/login/login.dart';
 import 'package:bazarmilo/views/pages/profile/profile.dart';
 import 'package:bazarmilo/views/pages/navigation/maps.dart';
@@ -22,8 +23,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => LoginProvider(),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => LoginError(), // Include the LoginError provider
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MapProvider(),
         ),
       ],
       child: SafeArea(

@@ -39,10 +39,10 @@ class DeliveryData {
   String getId() => id;
 
 
-  String getLatitudeTo() => latitudeTo;
+  double getLatitudeTo() => double.parse(latitudeTo);
 
 
-  String getLongitudeTo() => longitudeTo;
+  double getLongitudeTo() => double.parse(longitudeTo);
 
   String getProductID() => productID;
 
