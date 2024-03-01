@@ -5,3 +5,4 @@ An inventory Logistics system's mobile app for the purpose of tracking inventory
 - Run `flutter pub get` to install the dependencies
 - Run `flutter run` to start the app
 
+**By the way the Google Map API Key there don't work as it is open source project 😄** 
