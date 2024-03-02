@@ -146,7 +146,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bazarmilo"),
+        title: Text(""),
         // centerTitle: true,
       ),
       body: FlutterMap(
@@ -162,7 +162,7 @@ class _MapPageState extends State<MapPage> {
           PolylineLayer(
             polylineCulling: false,
             polylines: [
-              Polyline(points: routpoints, color: Colors.black, strokeWidth: 9),
+              Polyline(points: routpoints, color: Colors.black, strokeWidth: 3),
             ],
           ),
           MarkerLayer(

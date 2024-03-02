@@ -21,6 +21,7 @@ class loginPage extends StatefulWidget {
 class _loginPageState extends State<loginPage> {
   String httpUrl = API_URL;
   String completeUrl = "";
+  bool _isObscure = true;
 
   @override
   void initState() {
@@ -117,12 +118,24 @@ class _loginPageState extends State<loginPage> {
               padding: const EdgeInsets.only(left: 26.0, right: 26.0),
               child: TextField(
                 controller: passwordController,
-                decoration: const InputDecoration(
+                obscureText: _isObscure,
+                decoration: InputDecoration(
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Color(
                           0xffFF8D83), // Set the color of the underline here
                     ),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -169,8 +182,8 @@ class _loginPageState extends State<loginPage> {
                           setState(() {
                             Navigator.pushNamed(context, '/');
                             loginProvider.updateLoginStatus(true);
-                            loginProvider
-                                .updateUsername(usernameController.text.toString());
+                            loginProvider.updateUsername(
+                                usernameController.text.toString());
                           });
                         } else {
                           loginErrorProvider.updateLoginError(true);
